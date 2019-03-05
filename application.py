@@ -22,7 +22,7 @@ assets.register('scss_all', scss)
 
 @app.route("/")
 def index():
-    return "Project 2: TODO"
+    return render_template('index.html')
 
 
 if __name__ == '__main___':
