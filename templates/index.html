@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Display Name
+{% endblock %}
+
+{% block main %}
+    <div class="form-group">
+	  <label for="display-name">Display Name:</label>
+	  <input type="text" class="form-control" name="display-name" id="display-name" aria-describedby="helpId" placeholder="Name To Display">
+	  <small id="helpId" class="form-text text-muted">This is the name that will show when you send messages.</small>
+	</div>
+{% endblock %}
