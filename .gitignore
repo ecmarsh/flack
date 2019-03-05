@@ -1,0 +1,6 @@
+__pycache__/
+.vscode/
+flask/
+flask_session/
+env/
+.webassets-cache/
