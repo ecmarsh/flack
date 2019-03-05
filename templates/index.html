@@ -5,9 +5,17 @@
 {% endblock %}
 
 {% block main %}
-    <div class="form-group">
-	  <label for="display-name">Display Name:</label>
-	  <input type="text" class="form-control" name="display-name" id="display-name" aria-describedby="helpId" placeholder="Name To Display">
-	  <small id="helpId" class="form-text text-muted">This is the name that will show when you send messages.</small>
-	</div>
+	<div class="form-group">
+		<label for="name">Display Name:</label>
+		<input type="text" class="form-control" name="display-name" id="display-name" aria-describedby="helpId" aria-hidden="true" placeholder="Name To Display">
+		<small id="helpId" class="form-text text-muted">This is the name that will show when you send messages.</small>
+		</div>
+	<button type="button" class="btn btn-primary" id="btn-display-name"">Start</button>
+
+	<ul id="displayNames">
+	<strong>DISPLAY NAMES</strong>
+
+	</ul>
+
+	<script src="{{url_for('static', filename='js/index.js')}}"></script>
 {% endblock %}
