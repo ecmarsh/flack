@@ -5,3 +5,4 @@ flask_session/
 env/
 .webassets-cache/
 specs.md
+vote1/
