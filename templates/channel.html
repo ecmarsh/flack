@@ -1,0 +1,28 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Start A Channel
+{% endblock %}
+
+{% block main %}
+	<div class="form-group inline">
+		<label for="name">Channel Name:</label>
+		<input type="text" class="form-control" name="channel-name" id="channel-name" aria-describedby="helpId" placeholder="Channel Name">
+		<small id="helpId" aria-hidden="true" class="form-text text-muted">Give Channel A Name</small>
+	</div>
+	<button type="button" class="btn btn-primary" id="btn-channel-name"">Open Channel</button>
+
+	<div>
+		<ul id="channels-list">
+			{% for channel in existing_channels %}
+				<li>
+					<a href="channel/{{ channel['name'] }}">
+					{{ channel.name }}
+					</a>
+				</li>
+			{% endfor %}
+		</ul>
+	</div>
+
+	<script src="{{url_for('static', filename='js/channel.js')}}"></script>
+{% endblock %}
