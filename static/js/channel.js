@@ -4,7 +4,7 @@ $(document).ready(function() {
     location.protocol + '//' + document.domain + ':' + location.port
   );
 
-  // When connected, configure buttons
+  // Attach listeners
   socket.on('connect', function() {
     // Attach listeners to channel creation
     $('button#channel-name').click(function() {
@@ -13,8 +13,8 @@ $(document).ready(function() {
     });
   });
 
-  // When a new vote is announced, add to the unordered list
-  socket.on('show display name', function(data) {
-    $('ul#display-names').prepend(`<li>${data.displayName}</li>`);
+  $('form#join').submit(function(event) {
+    socket.emit('join', { room: $('input#join-room').val() });
+    return false;
   });
 });

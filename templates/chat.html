@@ -1,0 +1,29 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Start A Channel
+{% endblock %}
+
+{% block main %}
+	<div>
+    <h2>Room: {{ channel.name }}</h2>
+		<a href="/channel">Leave Room</a>
+	</div>
+	<div>
+	 <form>
+        <input type="text" name="room-data" id="room-data" placeholder="Message">
+        <button type="button" id="send-room" class="btn btn-primary" >Send</button>
+    </form>
+	</div>
+
+	<ul id="messages">
+	    {% for message in channel.messages %}
+			<li>
+			    <p>{{ message.user }}<span> {{message.stamp}}</span></p>
+				<p>{{ message.text }}</p>
+			</li>
+		{% endfor %}
+	</ul>
+
+	<script src="{{url_for('static', filename='js/chat.js')}}"></script>
+{% endblock %}
