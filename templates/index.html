@@ -1,22 +1,45 @@
 {% extends "layout.html" %}
 
 {% block title %}
-    Display Name
+    Chat
 {% endblock %}
 
 {% block main %}
+	<div class="row">
+    <h2>Chat</h2>
+	</div>
+	<div>
+        <div class="span3">
+          <ul class="nav nav-list well">
+            <li class="nav-header">Rooms</li>
+            <li><input ng-model='new_room_name' type='text' style='width:100%'/><div ng-click='createRoom()'>Create</div></li>
+            <li ng-repeat="room in rooms" ng-click="changeRoom(room)" ng-class="{'current_room': room==current_room}">{{room}}</li>
+          </ul>
 
-		<form action="/setcookie" method="POST">
-		{% if error %}
-    		<p class=error><strong>Shoot! </strong> {{ error }}
-  		{% endif %}
-			<div class="form-group">
-				<label for="name">Display Name:</label>
-				<input type="text" class="form-control" name="display-name" id="display-name" aria-describedby="helpId" aria-hidden="true" placeholder="Name To Display">
-				<small id="helpId" class="form-text text-muted">This is the name that will show when you send messages.</small>
-				</div>
-			<button type="submit" class="btn btn-primary" id="btn-display-name"">Start</button>
-		</form>
+        </div>
+          <ul class="nav nav-list well">
+            <li class="nav-header">Local Users</li>
+            <li ng-repeat="user in roster" ng-bind="user">
+            </li>
+          </ul>
 
-	<script src="{{url_for('static', filename='js/index.js')}}"></script>
+		<div class="row" style="display:none">
+	<form ng-submit="send()">
+		<input type="text" ng-model="name" name="user" id="user" placeholder="Display Name">
+	    <input type="submit" class="btn btn-primary" value="Send" ng-disabled="!name">
+	 </form>
+		</div>
+		<div class="row">
+	 <form ng-submit="send()">
+		 <input type="text" ng-model="text" name="message" id="message" placeholder="Message">
+	        <input type="submit" class="btn btn-primary" value="Send" ng-disabled="!name">
+	 </form>
+		</div>
+
+	<div class="scroll" id="msgpane">
+	<p ng-repeat="msg in messages">
+		<strong ng-bind="msg.name"></strong>:&nbsp;
+		<span ng-bind="msg.text"></span>
+	</p>
+	</div>
 {% endblock %}
