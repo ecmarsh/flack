@@ -1,7 +1,8 @@
 import os
 import requests
+import uuid
 
-from flask import Flask, flash, jsonify, make_response, redirect, render_template, request, url_for
+from flask import Flask, flash, jsonify, make_response, session, redirect, render_template, request, url_for
 from flask_scss import Scss
 from flask_assets import Environment, Bundle
 from flask_socketio import SocketIO, emit, namespace, send, join_room, leave_room
@@ -27,6 +28,39 @@ assets.register('scss_all', scss)
 # Channels
 channels = [{'name': 'test', 'messages': [
     {'user': 'ethan', 'text': 'sup', 'stamp': 'Wed May 08 2019 00: 39: 14 GMT-0700'}]}]
+
+messages = [{'text': 'Booting system', 'name': 'Bot'},
+            {'text': 'Chat now live!', 'name': 'Anon'}]
+
+users = {}
+
+
+@socketio.on('connect', namespace='/test')
+def makeConnection():
+    session['uuid'] = uuid.uuid1()
+    session['username'] = 'New user'
+    print('connected')
+    # Update users list
+    users[session['uuid']] = {'username': getcookie()}
+
+    for message in messages:
+        print(message)
+        emit('message', message)
+
+
+@socketio.on('identify', namespace='/test')
+def on_identify(message):
+    print('identify ' + message)
+    # Set the user
+    users[session['uuid']] = {'username': message}
+
+
+@socketio.on('message', namespace='/test')
+def new_message(message):
+    tmp = {'text': message, 'name': users[session['uuid']]['username']}
+    print(tmp)
+    messages.append(tmp)
+    emit('message', tmp, broadcast=True)
 
 
 def get_channel(name):
@@ -58,7 +92,7 @@ def index():
     name = getcookie()
     if name is None:
         return render_template('index.html')
-    return render_template('channel.html', channels=channels)
+    return render_template('channel.html', channels=channels, user=name)
 
 
 def getcookie():
@@ -99,7 +133,7 @@ def channel():
 @app.route("/chat/<channel_name>")
 def chat(channel_name):
     channel_data = get_channel(channel_name)
-    return render_template('chat.html', channel=channel_data)
+    return render_template('chat.html', channel=channel_data, user=getcookie())
 
 
 @socketio.on('connect')
@@ -144,4 +178,4 @@ def create_message(data):
 
 
 if __name__ == '__main___':
-    socketio.run(app)
+    socketio.run(app, debug=True)

@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 
-<html lang="en">
+<html lang="en" ng-app="ChatApp">
 	<head>
 		<meta charset="utf-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
@@ -25,6 +25,9 @@
 			<link rel="stylesheet" type="text/css" href="{{ ASSET_URL }}">
 		{% endassets %}
 
+		<!-- Angular library -->
+		<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.8/angular.min.js"></script>
+		<script src="{{url_for('static', filename='js/controller.js')}}"></script>
 		<!-- jQuery -->
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 		<!-- jQuery AJAX -->
@@ -39,7 +42,7 @@
 	</head>
 
 	<body>
-		<main class="main container pt-3">
+		<main class="main container pt-3" ng-controller="ChatController">
 		<h1>Flack</h1>
 		<!-- Flashes any messages -->
 		{% with messages = get_flashed_messages() %}

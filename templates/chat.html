@@ -9,7 +9,19 @@
     <h2>Room: {{ channel.name }}</h2>
 		<a href="/channel">Leave Room</a>
 	</div>
+	 <input type="text" ng-model="name" name="user" id="user" placeholder="Display Name">
 	<div>
+	 <form ng-submit="send()">
+		 <input type="text" ng-model="text" name="message" id="message" placeholder="Message">
+	        <input type="submit" class="btn btn-primary" value="Send" ng-disabled="!name">
+	 </form>
+
+	 <div class="scroll" id="msgpane">
+	<p ng-repeat="msg in messages">
+		<b ng-bind="msg.name"></b>:&nbsp;
+		<span ng-bind="msg.text"></span>
+	</p>
+	 <!--
 	 <form>
         <input type="text" name="room-data" id="room-data" placeholder="Message">
         <button type="button" id="send-room" class="btn btn-primary" >Send</button>
@@ -24,6 +36,10 @@
 			</li>
 		{% endfor %}
 	</ul>
+	-->
 
+
+	<!--
 	<script src="{{url_for('static', filename='js/chat.js')}}"></script>
+	-->
 {% endblock %}

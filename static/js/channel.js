@@ -12,9 +12,4 @@ $(document).ready(function() {
       socket.emit('create channel', { channel_name: channelName });
     });
   });
-
-  $('form#join').submit(function(event) {
-    socket.emit('join', { room: $('input#join-room').val() });
-    return false;
-  });
 });

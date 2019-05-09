@@ -6,19 +6,12 @@
 
 {% block main %}
 	<p>Logged in as: {{ user }}</p>
-	<div class="form-group inline">
+	<div class="form-inline">
 		<label for="name">Channel Name:</label>
 		<input type="text" class="form-control" name="channel-name" id="channel-name" aria-describedby="helpId" placeholder="Channel Name">
 		<small id="helpId" aria-hidden="true" class="form-text text-muted">Give Channel A Name</small>
 	<button type="button" class="btn btn-primary" id="btn-channel-name"">Open Channel</button>
 	</div>
-
-	<form id="join" class="form-inline" action="#" method="POST">
-		<div class="form-group">
-			<input type="text" readonly class="form-control-plaintext" id="join-room" name="join-room" value="test">
-		</div>
-		<button type="submit" class="btn btn-primary">Join Room</button>
-	</form>
 
 	<div>
 	    <h2>Open Channels</h2>
