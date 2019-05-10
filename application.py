@@ -11,7 +11,7 @@ from flask_assets import Environment, Bundle
 from flask_socketio import SocketIO, emit, namespace, send, join_room, leave_room
 from werkzeug.exceptions import default_exceptions, HTTPException, InternalServerError
 
-from helper import getcookie
+from helper import getcookie, now_stamp
 
 
 # __Init__
@@ -30,15 +30,24 @@ scss = Bundle(
     output='styles.css')
 assets.register('scss_all', scss)
 
-# Channels
-channels = [{'name': 'test', 'messages': [
-    {'user': 'ethan', 'text': 'sup', 'stamp': 'Wed May 08 2019 00: 39: 14 GMT-0700'}]}]
 
 # Globals
-messages = [{'text': 'Booting system', 'name': 'Bot'},
-            {'text': 'Chat now live!', 'name': 'Anon'}]
+messages = [{'text': 'Booting system', 'name': 'Bot', 'stamp': 'x'},
+            {'text': 'Chat now live!', 'name': 'Anon', 'stamp': 'x'}]
 users = {}
 rooms = ['General']
+
+
+@socketio.on('join', namespace='/test')
+def on_join(room):
+    print('joining room ' + room)
+    join_room(room)
+
+
+@socketio.on('leave', namespace='/test')
+def on_leave(room):
+    print('leaving room ' + room)
+    leave_room(room)
 
 
 def updateRoster():
@@ -59,16 +68,6 @@ def updateRooms():
 @socketio.on('connect', namespace='/test')
 def makeConnection():
     print('connected')
-    # session['uuid'] = uuid.uuid1()
-    # display_name = getcookie()
-
-    # if display_name is None:
-    #     session['username'] = 'Anonymous'
-    # else:
-    #     session['username'] = display_name
-
-    # # Update users list
-    # users[session['uuid']] = {'username': session['username']}
 
 
 @socketio.on('identify', namespace='/test')
@@ -91,10 +90,12 @@ def on_identify(message):
 
 @socketio.on('message', namespace='/test')
 def new_message(message):
-    tmp = {'text': message, 'name': users[session['uuid']]['username']}
+    room = message['room']
+    tmp = {'text': message['text'], 'name': users[session['uuid']]
+           ['username'], 'stamp': now_stamp()}
     print(tmp)
     messages.append(tmp)
-    emit('message', tmp, broadcast=True)
+    emit('message', tmp, room=room, broadcast=True)
 
 
 @socketio.on('disconnect')

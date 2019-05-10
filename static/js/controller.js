@@ -59,13 +59,15 @@ ChatApp.controller('ChatController', function($scope, $http) {
   };
 
   $scope.changeRoom = function(new_room) {
+    socket.emit('leave', $scope.current_room);
     $scope.current_room = new_room;
+    socket.emit('join', new_room);
   };
 
   // Send a message
   $scope.send = function send() {
     console.log('Sending message: ' + $scope.text);
-    socket.emit('message', $scope.text);
+    socket.emit('message', { text: $scope.text, room: $scope.current_room });
     $scope.text = ''; // Clear the input
   };
 });
