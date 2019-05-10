@@ -34,7 +34,7 @@ assets.register('scss_all', scss)
 channels = [{'name': 'test', 'messages': [
     {'user': 'ethan', 'text': 'sup', 'stamp': 'Wed May 08 2019 00: 39: 14 GMT-0700'}]}]
 
-# Global
+# Globals
 messages = [{'text': 'Booting system', 'name': 'Bot'},
             {'text': 'Chat now live!', 'name': 'Anon'}]
 users = {}
@@ -49,43 +49,44 @@ def updateRoster():
             names.append('Anonymous')
         else:
             names.append(username)
-    socketio.emit('roster', names)
+    socketio.emit('roster', names, namespace='/test')
 
 
 def updateRooms():
-    socketio.emit('rooms', rooms)
+    socketio.emit('rooms', rooms, namespace='/test')
 
 
 @socketio.on('connect', namespace='/test')
 def makeConnection():
-    session['uuid'] = uuid.uuid1()
-    session['username'] = 'New user'
     print('connected')
-    # Update users list
-    users[session['uuid']] = {'username': getcookie()}
+    # session['uuid'] = uuid.uuid1()
+    # display_name = getcookie()
 
-    # _uuid = session['uuid']
-    # if 'uuid' in session:
-    #     users[_uuid] = {'username': message}
-    #     updateRoster()
+    # if display_name is None:
+    #     session['username'] = 'Anonymous'
     # else:
-    #     print('sending information')
-    #     _uuid = uuid.uuid1()
-    #     session['username'] = 'starter name'
+    #     session['username'] = display_name
 
-    updateRoster()
-    updateRooms()
-
-    for message in messages:
-        print(message)
-        emit('message', message)
+    # # Update users list
+    # users[session['uuid']] = {'username': session['username']}
 
 
 @socketio.on('identify', namespace='/test')
 def on_identify(message):
-    print('identify ' + message)
-    # Set the user
-    users[session['uuid']] = {'username': message}
+    if 'uuid' in session:
+        print('identify ' + message)
+        users[session['uuid']] = {'username': message}
+        updateRoster()
+        socketio.emit('message', message + ' changed display name')
+    else:
+        print('sending information')
+        session['uuid'] = uuid.uuid1()
+        session['username'] = message
+        users[session['uuid']] = {'username': session['username']}
+        updateRoster()
+        updateRooms()
+        for message in messages:
+            emit('message', message)
 
 
 @socketio.on('message', namespace='/test')
@@ -106,31 +107,30 @@ def on_disconnect():
 @app.route('/new_room', methods=['POST'])
 def new_room():
     rooms.append(request.get_json()['name'])
-    print('updating rooms')
+    print('updating rooms...')
     updateRooms()
-    print('back')
 
-    return jsonify(success='ok')
-
-
-def get_channel(name):
-    fallback_data = {
-        'name': 'Channel Undefined',
-        'messages': [],
-    }
-    for channel in channels:
-        if channel['name'] == name:
-            channel_data = channel
-            return channel_data
-    return fallback_data
+    return jsonify(status=200, statusText='OK')
 
 
-def add_message(name, message):
-    for channel in channels:
-        if channel['name'] == name:
-            channel['messages'].append(message)
-            return channel
-    return False
+# def get_channel(name):
+#     fallback_data = {
+#         'name': 'Channel Undefined',
+#         'messages': [],
+#     }
+#     for channel in channels:
+#         if channel['name'] == name:
+#             channel_data = channel
+#             return channel_data
+#     return fallback_data
+
+
+# def add_message(name, message):
+#     for channel in channels:
+#         if channel['name'] == name:
+#             channel['messages'].append(message)
+#             return channel
+#     return False
 
 
 @app.route("/")
@@ -139,11 +139,7 @@ def index():
     If first time, show name form,
     else proceed to channels
     """
-    user = getcookie()
-    return render_template('index.html', user=user)
-    # if name is None:
-    #     return render_template('index.html')
-    # return render_template('channel.html', channels=channels, user=name)
+    return render_template('index.html')
 
 
 # def getcookie():

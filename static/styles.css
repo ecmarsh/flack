@@ -8,3 +8,7 @@
     body {
       box-sizing: border-box;
       font-family: Montserrat, sans-serif; }
+
+      .current_room {
+        font-weight: 900;
+        color: blue; }

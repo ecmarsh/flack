@@ -1,6 +1,6 @@
 var ChatApp = angular.module('ChatApp', []);
 
-ChatApp.controller('ChatController', function($scope) {
+ChatApp.controller('ChatController', function($scope, $http) {
   var namespace = '/test';
   var socket = io.connect(
     location.protocol + '//' + document.domain + ':' + location.port + namespace
@@ -8,7 +8,7 @@ ChatApp.controller('ChatController', function($scope) {
 
   $scope.messages = [];
   $scope.roster = [];
-  $scope.name = localStorage.getItem('name') || '';
+  $scope.name = cookieFns.get('displayName') || '';
   $scope.text = '';
   $scope.stamp = '';
 
@@ -32,14 +32,17 @@ ChatApp.controller('ChatController', function($scope) {
 
   $scope.createRoom = function() {
     if ($scope.new_room_name.length > 0) {
-      superagent
-        .post('/new_room')
-        .send({ name: $scope.new_room_name })
-        .end(function(err, result) {});
+      $http
+        .post('/new_room', { name: $scope.new_room_name })
+        .then(function(res) {
+          // console.log(JSON.stringify(res.data));
+          $scope.new_room_name = '';
+        }),
+        function(err) {
+          console.error(err);
+        };
     }
-
-    $scope.new_room_name = '';
-    console.log('Create room: ' + $scope.new_room_name);
+    console.log('Created room: ' + $scope.new_room_name);
   };
 
   // Show the message
@@ -47,12 +50,11 @@ ChatApp.controller('ChatController', function($scope) {
     console.log(msg);
     $scope.messages.push(msg);
     $scope.$apply(); // update UI
-    var el = document.getElementById('msgpane');
-    el.scrollTop = el.scrollHeight;
   });
 
   // Set display name
   $scope.setName = function setName() {
+    cookieFns.set('displayName', $scope.name);
     socket.emit('identify', $scope.name);
   };
 
