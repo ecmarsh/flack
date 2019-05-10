@@ -1,2 +1,4 @@
 Flask
 Flask_SocketIO
+Flask_Scss
+Flask_Assets

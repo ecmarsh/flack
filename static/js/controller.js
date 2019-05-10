@@ -11,6 +11,7 @@ ChatApp.controller('ChatController', function($scope, $http) {
   $scope.name = cookieFns.get('displayName') || '';
   $scope.text = '';
   $scope.stamp = '';
+  $scope.current_room = cookieFns.get('activeChannel') || '';
 
   socket.on('connect', function() {
     console.log('connected');
@@ -42,6 +43,7 @@ ChatApp.controller('ChatController', function($scope, $http) {
           console.error(err);
         };
     }
+    socket.emit('join', $scope.new_room_name);
     console.log('Created room: ' + $scope.new_room_name);
   };
 

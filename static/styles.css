@@ -12,3 +12,7 @@
       .current_room {
         font-weight: 900;
         color: blue; }
+
+        #msgpane {
+          min-height: 40vh;
+          overflow: scroll; }

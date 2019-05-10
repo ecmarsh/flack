@@ -1,88 +1,82 @@
-{% extends "layout.html" %}
+{% extends "layout.html" %} {% block title %} Chat {% endblock %} {% block main
+%}
+<div class="row">
+  <form ng-submit="setName()">
+    <input
+      type="text"
+      ng-model="name"
+      name="user"
+      id="user"
+      placeholder="Display Name"
+    />
+    <input type="submit" class="btn btn-primary" value="Set Name" />
+  </form>
+</div>
 
-{% block title %}
-    Chat
-{% endblock %}
+<div class="row">
+  <div class="col-4">
+    <div class="row">
+      <form ng-submit="createRoom()">
+        <input
+          type="text"
+          ng-model="new_room_name"
+          name="new_room_name"
+          id="new_room_name"
+          placeholder="New Channel Name"
+        />
+        <input type="submit" class="btn btn-primary" value="Create Channel" />
+      </form>
+    </div>
 
-{% block main %}
-	<div class="row">
-    <h2>Chat</h2>
-	</div>
-
-	<div class="row">
-		<form ng-submit="setName()">
-			<input
-				type="text"
-				ng-model="name"
-				name="user"
-				id="user"
-				placeholder="Display Name">
-	    <input
-				type="submit"
-				class="btn btn-primary"
-				value="Set Name">
-	  </form>
-	</div>
-
-	<div class="row">
-		<form ng-submit="createRoom()">
-			<input
-				type="text"
-				ng-model='new_room_name'
-				name="new_room_name"
-				id="new_room_name"
-				placeholder="New Channel Name">
-	    <input
-				type="submit"
-				class="btn btn-primary"
-				value="Create Channel">
-	  </form>
-	</div>
-
-	<div class="channels">
-    <h4 class="nav-header">Channels</h4>
+    <div class="channels">
+      <h4 class="nav-header">Channels</h4>
       <ul>
-				<li
-					ng-repeat="room in rooms"
-					ng-click="changeRoom(room)"
-					ng-class="{'current_room': room==current_room}"
-					ng-bind="room">
-				</li>
+        <li
+          ng-repeat="room in rooms"
+          ng-click="changeRoom(room)"
+          ng-class="{'current_room': room==current_room}"
+          ng-bind="room"
+        ></li>
       </ul>
-  	</div>
+    </div>
 
-	<div class="roster">
-    <h4 class="nav-header">Online:</h4>
+    <div class="roster">
+      <h4 class="nav-header">Online:</h4>
       <ul>
-				<li
-					ng-repeat="user in roster track by $index"
-					ng-bind="user">
-				</li>
+        <li ng-repeat="user in roster track by $index" ng-bind="user"></li>
       </ul>
+    </div>
   </div>
 
-		<div class="row">
-	 		<form ng-submit="send()">
-		 		<input
-					type="text"
-					ng-model="text"
-					name="message"
-					id="message"
-					placeholder="Message" />
-				<input
-					type="submit"
-					class="btn btn-primary"
-					value="Send"
-					ng-disabled="!name" />
-	 		</form>
-		</div>
+  <div class="col-8">
+    <h2>Current Room: <span ng-bind="current_room"></span></h2>
 
-	<div id="msgpane">
-		<p ng-repeat="msg in messages track by $index">
-			<strong ng-bind="msg.name"></strong>:&nbsp;
-			<small ng-bind="msg.stamp"></small>
-			<span ng-bind="msg.text"></span>
-		</p>
-	</div>
+    <div class="bg-light" id="msgpane">
+      <p ng-repeat="msg in messages track by $index">
+        <strong ng-bind="msg.name"></strong>:&nbsp;
+        <small ng-bind="msg.stamp"></small>
+        <span ng-bind="msg.text"></span>
+      </p>
+    </div>
+
+    <div class="row">
+      <form ng-submit="send()">
+        <input
+          type="text"
+          ng-model="text"
+          name="message"
+          id="message"
+          placeholder="Message"
+        />
+        <input
+          type="submit"
+          class="btn btn-primary"
+          value="Send"
+          ng-disabled="!name"
+        />
+      </form>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
