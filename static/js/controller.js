@@ -60,13 +60,15 @@ ChatApp.controller('ChatController', function($scope, $http) {
     socket.emit('identify', $scope.name);
   };
 
+  // Leave current room, join selected room
   $scope.changeRoom = function(new_room) {
     socket.emit('leave', $scope.current_room);
     $scope.current_room = new_room;
     socket.emit('join', new_room);
+    cookieFns.set('activeChannel', new_room);
   };
 
-  // Send a message
+  // Create a new message
   $scope.send = function send() {
     console.log('Sending message: ' + $scope.text);
     socket.emit('message', { text: $scope.text, room: $scope.current_room });

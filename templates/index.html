@@ -1,6 +1,10 @@
-{% extends "layout.html" %} {% block title %} Chat {% endblock %} {% block main
-%}
-<div class="row">
+{% extends "layout.html" %}
+
+{% block title %} Chat {% endblock %}
+
+{% block main %}
+ <!-- NAME -->
+<div class="row justify-content-center pb-4">
   <form ng-submit="setName()">
     <input
       type="text"
@@ -9,29 +13,31 @@
       id="user"
       placeholder="Display Name"
     />
-    <input type="submit" class="btn btn-primary" value="Set Name" />
+    <input type="submit" class="btn btn-outline-primary btn-sm" value="Set Name" />
   </form>
 </div>
 
 <div class="row">
-  <div class="col-4">
-    <div class="row">
-      <form ng-submit="createRoom()">
-        <input
-          type="text"
-          ng-model="new_room_name"
-          name="new_room_name"
-          id="new_room_name"
-          placeholder="New Channel Name"
-        />
-        <input type="submit" class="btn btn-primary" value="Create Channel" />
-      </form>
-    </div>
-
+  <!-- LEFTBAR -->
+  <div class="col-4 border border-primary p-2">
+    <!-- Channels -->
     <div class="channels">
       <h4>Channels</h4>
+      <div class="row">
+        <form class="mb-2" ng-submit="createRoom()">
+          <input
+            type="text"
+            ng-model="new_room_name"
+            name="new_room_name"
+            id="new_room_name"
+            placeholder="New Channel Name"
+          />
+          <input type="submit" class="btn btn-sm btn-outline-primary" value="Create" />
+        </form>
+      </div>
       <ul>
         <li
+          class="channel ml-2"
           ng-repeat="room in rooms"
           ng-click="changeRoom(room)"
           ng-class="{'current_room': room==current_room}"
@@ -39,19 +45,20 @@
         ></li>
       </ul>
     </div>
-
+    <!-- Users -->
     <div class="roster">
       <h4>Online</h4>
       <ul>
-        <li ng-repeat="user in roster track by $index" ng-bind="user"></li>
+        <li ng-repeat="user in roster track by $index" ng-bind="user" class="user pl-2"></li>
       </ul>
     </div>
   </div>
 
-  <div class="col-8">
+   <!-- RIGHTBAR -->
+  <div class="col-8 border border-left-0 border-primary p-2">
     <h2>Current Room: <span ng-bind="current_room"></span></h2>
-
-    <div class="bg-light" id="msgpane">
+    <!-- Messages -->
+    <div class="bg-light mb-2 p-2 rounded" id="msgpane">
       <p ng-repeat="msg in messages track by $index">
         <strong ng-bind="msg.name"></strong>:&nbsp;
         <small ng-bind="msg.stamp"></small>
@@ -59,9 +66,11 @@
       </p>
     </div>
 
+    <!-- Message input -->
     <div class="row">
-      <form ng-submit="send()">
+      <form class="message d-flex" ng-submit="send()">
         <input
+          class="flex-grow-1 mr-2"
           type="text"
           ng-model="text"
           name="message"

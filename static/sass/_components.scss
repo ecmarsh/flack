@@ -3,3 +3,35 @@
   max-height: 50vh;
   overflow: scroll;
 }
+
+form.message {
+  width: 100%;
+  input#message {
+    padding: 4px 0;
+  }
+}
+
+li.channel {
+  &.current_room {
+    font-weight: 900;
+    color: $primary;
+  }
+  &:hover {
+    cursor: pointer;
+    text-decoration: underline;
+  }
+}
+
+li.user {
+  position: relative;
+  &::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: $primary;
+    position: absolute;
+    top: calc(50% - 5px);
+    left: 0;
+  }
+}

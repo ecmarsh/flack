@@ -9,10 +9,43 @@
       box-sizing: border-box;
       font-family: Montserrat, sans-serif; }
 
-      .current_room {
-        font-weight: 900;
-        color: blue; }
+      ul {
+        list-style: none; }
 
-        #msgpane {
-          min-height: 40vh;
-          overflow: scroll; }
+        input:focus {
+          outline-color: #f3969a; }
+
+          .row {
+            margin: 0 !important; }
+
+            .bg-light {
+              background: #eee !important; }
+
+              #msgpane {
+                min-height: 40vh;
+                max-height: 50vh;
+                overflow: scroll; }
+
+                form.message {
+                  width: 100%; }
+                  form.message input#message {
+                    padding: 4px 0; }
+
+li.channel.current_room {
+  font-weight: 900;
+  color: #78c2ad; }
+  li.channel:hover {
+    cursor: pointer;
+    text-decoration: underline; }
+
+li.user {
+  position: relative; }
+  li.user::before {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: #78c2ad;
+    position: absolute;
+    top: calc(50% - 5px);
+    left: 0; }
