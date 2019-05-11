@@ -3,16 +3,15 @@ from datetime import datetime
 
 
 def now_stamp():
-    """ Creates string formatted timestamp """
+    """ Timestamp generator """
     now = datetime.now()
     timestamp = now.strftime("%H:%M:%S")
     return timestamp
 
 
-def getcookie():
-    """ Gets display name from cookie """
+def get_cookie(key):
+    """ Get cookie value """
     try:
-        name = request.cookies.get('displayName')
+        return request.cookies.get(key)
     except ValueError:
-        name = None
-    return name
+        return None

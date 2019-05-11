@@ -33,35 +33,28 @@
         background: #ffffff;
         color: #78c2ad; }
 
-#msgpane {
-  min-height: 40vh;
-  max-height: 50vh;
-  overflow: scroll; }
+leftbar h4 {
+  color: #f5f5f5; }
 
-  form.message {
-    width: 100%; }
-    form.message input#message {
-      padding: 4px 0 4px 3px; }
+  h2.active-channel, h2.active-channel span {
+    text-transform: lowercase;
+    color: #78c2ad;
+    font-size: 1.8rem; }
 
-h2.active-channel, h2.active-channel span {
-  text-transform: lowercase;
-  color: #78c2ad;
-  font-size: 1.8rem; }
-
-  li.channel {
-    position: relative;
-    text-transform: lowercase; }
-    li.channel.current {
-      font-weight: 900; }
-      li.channel::before {
-        content: '#';
-        position: absolute;
-        top: 5%;
-        left: 0;
-        font-weight: normal !important; }
-        li.channel:hover {
-          cursor: pointer;
-          text-decoration: underline; }
+    li.channel {
+      position: relative;
+      text-transform: lowercase; }
+      li.channel.current {
+        font-weight: 900; }
+        li.channel::before {
+          content: '#';
+          position: absolute;
+          top: 5%;
+          left: 0;
+          font-weight: normal !important; }
+          li.channel:hover {
+            cursor: pointer;
+            text-decoration: underline; }
 
 li.user {
   position: relative; }
@@ -74,3 +67,13 @@ li.user {
     position: absolute;
     top: calc(50% - 3px);
     left: 0; }
+
+#msgpane {
+  min-height: 40vh;
+  max-height: 50vh;
+  overflow: scroll; }
+
+  form.message {
+    width: 100%; }
+    form.message input#message {
+      padding: 4px 0 4px 3px; }

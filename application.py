@@ -8,16 +8,16 @@ from flask_scss import Scss
 from flask_assets import Environment, Bundle
 from flask_socketio import SocketIO, emit, namespace, send, join_room, leave_room
 
-from helper import getcookie, now_stamp
+from channels import Channels
+from helper import get_cookie, now_stamp
 
 
 # __Init__
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
-# Setup socketIO
 socketio = SocketIO(app)
 
-# Compile sass to css sheet
+# Compile scss
 assets = Environment(app)
 assets.url = app.static_url_path
 scss = Bundle(
@@ -29,10 +29,13 @@ assets.register('scss_all', scss)
 
 
 # Globals
-messages = [{'text': 'Booting system', 'name': 'Bot', 'stamp': 'x'},
-            {'text': 'Chat now live!', 'name': 'Anon', 'stamp': 'x'}]
 users = {}
-rooms = ['General']
+
+# Initalize channels
+rooms = Channels()
+rooms.add_channel('general')
+msg = {'text': 'Booting system', 'name': 'Bot', 'stamp': now_stamp()}
+rooms.add_message('general', msg)
 
 
 @app.route("/")
@@ -44,20 +47,21 @@ def index():
 #
 # Socket built-in events
 #
-@socketio.on('connect', namespace='/test')
+@socketio.on('connect', namespace='/chat')
 def makeConnection():
     print('connected')
 
 
-@socketio.on('join', namespace='/test')
+@socketio.on('join', namespace='/chat')
 def on_join(room):
-    print('joining room ' + room)
+    print('Joining room ' + room)
     join_room(room)
+    updateMessages(room)  # Sync UI
 
 
-@socketio.on('leave', namespace='/test')
+@socketio.on('leave', namespace='/chat')
 def on_leave(room):
-    print('leaving room ' + room)
+    print('Leaving room ' + room)
     leave_room(room)
 
 
@@ -85,40 +89,45 @@ def updateRoster():
         else:
             names.append(username)
     # Send to client for UI update
-    socketio.emit('roster', names, namespace='/test')
+    socketio.emit('roster', names, namespace='/chat')
 
 
 def updateRooms():
-    """
-    Send active channels to UI
-    """
-    socketio.emit('rooms', rooms, namespace='/test')
+    """ Send active channels to UI """
+    socketio.emit('rooms', rooms.all_channels(), namespace='/chat')
 
 
-@socketio.on('identify', namespace='/test')
-def on_identify(message):
+@socketio.on('identify', namespace='/chat')
+def on_identify(displayName):
     """ Handle setting display name """
     # If session already active
     # Just change the display name
     if 'uuid' in session:
-        print('identify ' + message)
-        users[session['uuid']] = {'username': message}
+        print('Identifying ' + displayName)
+        users[session['uuid']] = {'username': displayName}
         updateRoster()
-        socketio.emit('message', message + ' changed display name')
     else:
         # Create a new session and set name
-        print('sending information')
+        print('Setting new user...')
         session['uuid'] = uuid.uuid1()
-        session['username'] = message
-        users[session['uuid']] = {'username': session['username']}
+        users[session['uuid']] = {'username': displayName}
+
         # Sync globals for new user
         updateRoster()
         updateRooms()
-        for message in messages:
-            emit('message', message)
+        channel = get_cookie('activeChannel')
+        updateMessages(channel)
 
 
-@socketio.on('message', namespace='/test')
+def updateMessages(channel='general'):
+    messages = rooms.get_messages(channel)
+    print(messages)
+    print('Should be updating room ' + channel)
+    for message in messages:
+        emit('message', message, room="channel", broadcast=False)
+
+
+@socketio.on('message', namespace='/chat')
 def new_message(message):
     """
     Broadcast message to current room
@@ -126,17 +135,17 @@ def new_message(message):
     room = message['room']
     # Default to general room
     if room is None:
-        room = 'General'
+        room = 'general'
 
     # Tmp message obj
     tmp = {'text': message['text'],
            'name': users[session['uuid']]['username'],
            'stamp': now_stamp()}
-    print(tmp)
 
-    # Add to list of messages
-    messages.append(tmp)
-
+    # Save message to room
+    rooms.add_message(room, tmp)
+    print(room+":")
+    print(rooms._msgs[room])
     # Broadcast to current room
     emit('message', tmp, room=room, broadcast=True)
 
@@ -148,15 +157,30 @@ def new_room():
     Create a new channel and add to rooms
     """
 
-    # Add created room to list
-    rooms.append(request.get_json()['name'])
-    print('updating rooms...')
+    channel = request.get_json()['name'].lower()
+
+    # Save channel
+    create_channel(channel)
+    print('Updating rooms...')
 
     # Broadcast the new rooms to users
     updateRooms()
 
     # We goood 👍
     return jsonify(status=200, statusText='OK')
+
+
+def create_channel(channel):
+    """ Setup a new channel """
+    rooms.add_channel(channel)
+    # Tmp message obj
+    tmp1 = {'text': 'Booting channel...',
+            'name': 'Bot',
+            'stamp': now_stamp()}
+    rooms.add_message(channel, tmp1)
+    tmp2 = tmp1
+    tmp2['text'] = 'Chat in ' + channel + ' live!'
+    rooms.add_message(channel, tmp2)
 
 
 if __name__ == '__main___':
