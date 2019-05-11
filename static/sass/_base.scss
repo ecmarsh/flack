@@ -11,15 +11,20 @@ html {
 
 body {
   box-sizing: border-box;
-  font-family: $font-primary;
+  font-family: $font-system;
 }
 
 ul {
   list-style: none;
 }
 
-input:focus {
-  outline-color: $secondary;
+input {
+  &:focus {
+    outline-color: $secondary;
+  }
+  &[type='text'] {
+    padding-left: 3px;
+  }
 }
 
 /* Bootstrap Overrides */
@@ -27,5 +32,14 @@ input:focus {
   margin: 0 !important;
 }
 .bg-light {
-  background: #eee !important;
+  background: $grey-light !important;
+}
+.btn-outline-primary {
+  border: 1px solid white;
+  background: $primary;
+  color: $white;
+  &:hover {
+    background: $white;
+    color: $primary;
+  }
 }

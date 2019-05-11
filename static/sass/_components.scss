@@ -1,20 +1,26 @@
-#msgpane {
-  min-height: 40vh;
-  max-height: 50vh;
-  overflow: scroll;
+leftbar h4 {
+  color: $grey-light;
 }
 
-form.message {
-  width: 100%;
-  input#message {
-    padding: 4px 0;
-  }
+h2.active-channel,
+h2.active-channel span {
+  text-transform: lowercase;
+  color: $primary;
+  font-size: 1.8rem;
 }
 
 li.channel {
-  &.current_room {
+  position: relative;
+  text-transform: lowercase;
+  &.current {
     font-weight: 900;
-    color: $primary;
+  }
+  &::before {
+    content: '#';
+    position: absolute;
+    top: 5%;
+    left: 0;
+    font-weight: normal !important;
   }
   &:hover {
     cursor: pointer;
@@ -29,9 +35,22 @@ li.user {
     width: 5px;
     height: 5px;
     border-radius: 50%;
-    background: $primary;
+    background: $grey-light;
     position: absolute;
-    top: calc(50% - 5px);
+    top: calc(50% - 3px);
     left: 0;
+  }
+}
+
+#msgpane {
+  min-height: 40vh;
+  max-height: 50vh;
+  overflow: scroll;
+}
+
+form.message {
+  width: 100%;
+  input#message {
+    padding: 4px 0 4px 3px;
   }
 }

@@ -3,44 +3,53 @@
 {% block title %} Chat {% endblock %}
 
 {% block main %}
- <!-- NAME -->
-<div class="row justify-content-center pb-4">
-  <form ng-submit="setName()">
-    <input
-      type="text"
-      ng-model="name"
-      name="user"
-      id="user"
-      placeholder="Display Name"
-    />
-    <input type="submit" class="btn btn-outline-primary btn-sm" value="Set Name" />
-  </form>
-</div>
 
 <div class="row">
   <!-- LEFTBAR -->
-  <div class="col-4 border border-primary p-2">
+  <div class="leftbar col-4 border border-primary p-3 bg-primary text-white">
+    <!-- Name -->
+    <div class="username pb-4">
+      <h4>Name</h4>
+      <div class="row">
+        <form class="d-flex" ng-submit="setName()">
+          <input
+            type="text"
+            ng-model="name"
+            name="user"
+            id="user"
+            placeholder="Display Name"
+            class="mr-2"
+          />
+          <input type="submit" class="btn btn-outline-primary btn-sm" value="Save" />
+        </form>
+      </div>
+    </div>
     <!-- Channels -->
     <div class="channels">
       <h4>Channels</h4>
       <div class="row">
-        <form class="mb-2" ng-submit="createRoom()">
+        <form class="mb-2 d-flex" ng-submit="createRoom()">
           <input
             type="text"
+            class="mr-2"
             ng-model="new_room_name"
             name="new_room_name"
             id="new_room_name"
             placeholder="New Channel Name"
           />
-          <input type="submit" class="btn btn-sm btn-outline-primary" value="Create" />
+          <input
+          type="submit"
+          class="btn btn-sm btn-outline-primary"
+          value="Add"
+          ng-disabled="!name" />
         </form>
       </div>
       <ul>
         <li
-          class="channel ml-2"
+          class="channel ml-2 pl-3"
           ng-repeat="room in rooms"
           ng-click="changeRoom(room)"
-          ng-class="{'current_room': room==current_room}"
+          ng-class="{'current': room==current_room}"
           ng-bind="room"
         ></li>
       </ul>
@@ -49,14 +58,19 @@
     <div class="roster">
       <h4>Online</h4>
       <ul>
-        <li ng-repeat="user in roster track by $index" ng-bind="user" class="user pl-2"></li>
+        <li
+          ng-repeat="user in roster track by $index"
+          ng-bind="user"
+          class="user pl-3 ml-2">:&nbsp;
+          <span ng-class="{'d-none': user!==name}">(you)</span>
+        </li>
       </ul>
     </div>
   </div>
 
    <!-- RIGHTBAR -->
-  <div class="col-8 border border-left-0 border-primary p-2">
-    <h2>Current Room: <span ng-bind="current_room"></span></h2>
+  <div class="rightbar col-8 border border-left-0 border-primary p-2">
+    <h2 class="active-channel"># <span ng-bind="current_room"></span></h2>
     <!-- Messages -->
     <div class="bg-light mb-2 p-2 rounded" id="msgpane">
       <p ng-repeat="msg in messages track by $index">
