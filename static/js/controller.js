@@ -11,12 +11,11 @@ ChatApp.controller('ChatController', function($scope, $http) {
         namespace
     );
 
-  $scope.name = cookieFns.get('displayName') || '';
-  $scope.current_room = cookieFns.get('activeChannel') || '';
-  $scope.messages = [];
-  $scope.roster = [];
-  $scope.text = '';
-  $scope.stamp = '';
+  $scope.name = cookieFns.get('displayName') || ''; // display name
+  $scope.current_room = cookieFns.get('activeChannel') || 'general';
+  $scope.messages = []; // active room messages
+  $scope.roster = []; // online users
+  $scope.text = ''; // message text form
 
   socket.on('connect', function() {
     console.log('Connected');
@@ -47,6 +46,7 @@ ChatApp.controller('ChatController', function($scope, $http) {
   // Create new channel
   $scope.createRoom = function() {
     if ($scope.new_room_name.length > 0) {
+      // POST req to create channel
       $http
         .post('/new_room', { name: $scope.new_room_name })
         .then(function(res) {
@@ -57,17 +57,28 @@ ChatApp.controller('ChatController', function($scope, $http) {
           console.error(e);
         };
     }
+    // Move them into the new room
     $scope.changeRoom($scope.new_room_name);
-
-    console.log('Created room: ' + $scope.new_room_name);
+    $scope.apply();
   };
+
+  // Batch update messages
+  socket.on('localUpdate', function(msgs) {
+    $scope.messages = msgs;
+    $scope.$apply();
+  });
 
   // Show the message
   socket.on('message', function(msg) {
-    console.log(msg);
     $scope.messages.push(msg);
     $scope.$apply(); // Update UI
   });
+
+  // Create a new message
+  $scope.send = function send() {
+    socket.emit('message', { text: $scope.text, room: $scope.current_room });
+    $scope.text = ''; // Clear the input
+  };
 
   // Set and save display name
   $scope.setName = function setName() {
@@ -84,12 +95,5 @@ ChatApp.controller('ChatController', function($scope, $http) {
     cookieFns.set('activeChannel', new_room.toLowerCase());
     // Join the new room
     socket.emit('join', new_room);
-  };
-
-  // Create a new message
-  $scope.send = function send() {
-    console.log('Sending message: ' + $scope.text);
-    socket.emit('message', { text: $scope.text, room: $scope.current_room });
-    $scope.text = ''; // Clear the input
   };
 });
