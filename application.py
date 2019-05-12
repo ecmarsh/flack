@@ -8,7 +8,7 @@ from flask_assets import Environment, Bundle
 from flask_socketio import SocketIO, emit, namespace, send, join_room, leave_room
 
 from channels import Channels
-from helper import get_cookie, now_stamp
+from helper import add_seconds, get_cookie, now_stamp
 
 
 # App Init
@@ -140,7 +140,8 @@ def create_channel(channel):
             'stamp': now_stamp()}
     rooms.add_message(channel, tmp1)
     tmp2 = tmp1
-    tmp2['text'] = 'Chat in ' + channel + ' live!'
+    tmp2['text'] = 'Chat in #' + channel + ' live!'
+    tmp2['stamp'] = add_seconds(tmp2['stamp'])
     rooms.add_message(channel, tmp2)
 
 

@@ -15,3 +15,9 @@ def get_cookie(key):
         return request.cookies.get(key)
     except ValueError:
         return None
+
+
+def add_seconds(strtime):
+    """ Space time for bot message """
+    s = int(strtime[6:]) + 2 % 60
+    return strtime[:(len(strtime)-2)] + f'{s}'

@@ -19,8 +19,9 @@ ChatApp.controller('ChatController', function($scope, $http) {
 
   socket.on('connect', function() {
     console.log('Connected');
-    // Send any cookie values to server
+    // Send saved name to server
     $scope.setName();
+    // Join if saved room
     if ($scope.current_room) {
       socket.emit('join', $scope.current_room);
     }
@@ -34,7 +35,6 @@ ChatApp.controller('ChatController', function($scope, $http) {
 
   // Sync local channels w/ server rooms
   socket.on('rooms', function(rooms) {
-    console.log('Got some new rooms');
     $scope.rooms = rooms;
     if (!$scope.current_room) {
       $scope.current_room = rooms[0];
@@ -46,6 +46,15 @@ ChatApp.controller('ChatController', function($scope, $http) {
   // Create new channel
   $scope.createRoom = function() {
     if ($scope.new_room_name.length > 0) {
+      // Add number if duplicate channel names
+      let i = 0;
+      while ($scope.rooms.findIndex(el => el === $scope.new_room_name) !== -1) {
+        if (i > 0) {
+          const end = $scope.new_room_name.length - String(i).length;
+          $scope.new_room_name = $scope.new_room_name.substring(0, end);
+        }
+        $scope.new_room_name += `${++i}`;
+      }
       // POST req to create channel
       $http
         .post('/new_room', { name: $scope.new_room_name })
@@ -59,7 +68,6 @@ ChatApp.controller('ChatController', function($scope, $http) {
     }
     // Move them into the new room
     $scope.changeRoom($scope.new_room_name);
-    $scope.apply();
   };
 
   // Batch update messages
