@@ -18,9 +18,8 @@
             name="user"
             id="user"
             placeholder="Display Name"
-            class="mr-2"
-          />
-          <input type="submit" class="btn btn-outline-primary btn-sm" value="Save" />
+            class="mr-2">
+          <input type="submit" class="btn btn-outline-primary btn-sm" value="Save">
         </form>
       </div>
     </div>
@@ -35,13 +34,12 @@
             ng-model="new_room_name"
             name="new_room_name"
             id="new_room_name"
-            placeholder="New Channel Name"
-          />
+            placeholder="New Channel Name">
           <input
           type="submit"
           class="btn btn-sm btn-outline-primary"
           value="Add"
-          ng-disabled="!name" />
+          ng-disabled="!name">
         </form>
       </div>
       <ul>
@@ -62,7 +60,6 @@
           ng-repeat="user in roster track by $index"
           ng-bind="user"
           class="user pl-3 ml-2">:&nbsp;
-          <span ng-class="{'d-none': user!==name}">(you)</span>
         </li>
       </ul>
     </div>
@@ -74,9 +71,9 @@
     <!-- Messages -->
     <div class="bg-light mb-2 p-2 rounded" id="msgpane">
       <p ng-repeat="msg in messages track by $index">
+        <small class="text-muted mr-1" ng-bind="msg.stamp"></small>
         <strong ng-bind="msg.name"></strong>:&nbsp;
-        <small ng-bind="msg.stamp"></small>
-        <span ng-bind="msg.text"></span>
+        <span ng-bind="msg.text" ng-style="msg.color"></span>
       </p>
     </div>
 
@@ -84,19 +81,23 @@
     <div class="row">
       <form class="message d-flex" ng-submit="send()">
         <input
+          type="color"
+          id="msgCol"
+          name="msgCol"
+          value="#888888"
+          ng-model="color">
+        <input
           class="flex-grow-1 mr-2"
           type="text"
           ng-model="text"
           name="message"
           id="message"
-          placeholder="Message"
-        />
+          placeholder="Message">
         <input
           type="submit"
           class="btn btn-primary"
           value="Send"
-          ng-disabled="!name"
-        />
+          ng-disabled="!name">
       </form>
     </div>
   </div>

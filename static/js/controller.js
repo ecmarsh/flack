@@ -16,6 +16,7 @@ ChatApp.controller('ChatController', function($scope, $http) {
   $scope.messages = []; // active room messages
   $scope.roster = []; // online users
   $scope.text = ''; // message text form
+  $scope.color = ''; // message color
 
   socket.on('connect', function() {
     console.log('Connected');
@@ -84,7 +85,11 @@ ChatApp.controller('ChatController', function($scope, $http) {
 
   // Create a new message
   $scope.send = function send() {
-    socket.emit('message', { text: $scope.text, room: $scope.current_room });
+    socket.emit('message', {
+      text: $scope.text,
+      room: $scope.current_room,
+      color: $scope.color,
+    });
     $scope.text = ''; // Clear the input
   };
 

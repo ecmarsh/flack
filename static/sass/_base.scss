@@ -25,6 +25,12 @@ input {
   &[type='text'] {
     padding-left: 3px;
   }
+  &[type='color'] {
+    height: 100%;
+    width: 15px;
+    margin-right: 4px;
+    background-color: $grey-light;
+  }
 }
 
 /* Bootstrap Overrides */
@@ -42,4 +48,8 @@ input {
     background: $white;
     color: $primary;
   }
+}
+.text-muted {
+  color: $grey !important;
+  font-size: 70% !important;
 }

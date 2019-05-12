@@ -18,6 +18,11 @@
           outline-color: #f3969a; }
           input[type='text'] {
             padding-left: 3px; }
+            input[type='color'] {
+              height: 100%;
+              width: 15px;
+              margin-right: 4px;
+              background-color: #f5f5f5; }
 
 .row {
   margin: 0 !important; }
@@ -33,28 +38,32 @@
         background: #ffffff;
         color: #78c2ad; }
 
-leftbar h4 {
-  color: #f5f5f5; }
+.text-muted {
+  color: #aaa !important;
+  font-size: 70% !important; }
 
-  h2.active-channel, h2.active-channel span {
-    text-transform: lowercase;
-    color: #78c2ad;
-    font-size: 1.8rem; }
+  leftbar h4 {
+    color: #f5f5f5; }
 
-    li.channel {
-      position: relative;
-      text-transform: lowercase; }
-      li.channel.current {
-        font-weight: 900; }
-        li.channel::before {
-          content: '#';
-          position: absolute;
-          top: 5%;
-          left: 0;
-          font-weight: normal !important; }
-          li.channel:hover {
-            cursor: pointer;
-            text-decoration: underline; }
+    h2.active-channel, h2.active-channel span {
+      text-transform: lowercase;
+      color: #78c2ad;
+      font-size: 1.8rem; }
+
+      li.channel {
+        position: relative;
+        text-transform: lowercase; }
+        li.channel.current {
+          font-weight: 900; }
+          li.channel::before {
+            content: '#';
+            position: absolute;
+            top: 5%;
+            left: 0;
+            font-weight: normal !important; }
+            li.channel:hover {
+              cursor: pointer;
+              text-decoration: underline; }
 
 li.user {
   position: relative; }
@@ -77,3 +86,6 @@ li.user {
     width: 100%; }
     form.message input#message {
       padding: 4px 0 4px 3px; }
+
+.hrow {
+  margin: 0 auto !important; }

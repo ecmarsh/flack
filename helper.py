@@ -2,6 +2,11 @@ from flask import request
 from datetime import datetime
 
 
+def cObj(val):
+    """ Generate style objects """
+    return {'color': str(val)}
+
+
 def now_stamp():
     """ Timestamp generator """
     now = datetime.now()
@@ -17,7 +22,9 @@ def get_cookie(key):
         return None
 
 
-def add_seconds(strtime):
+def add_seconds(strtime, seconds=2):
     """ Space time for bot message """
-    s = int(strtime[6:]) + 2 % 60
+    s = int(strtime[6:]) + seconds % 60
+    if len((str(s))) < 2:
+        s = f'{0}' + s
     return strtime[:(len(strtime)-2)] + f'{s}'

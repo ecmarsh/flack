@@ -8,7 +8,7 @@ from flask_assets import Environment, Bundle
 from flask_socketio import SocketIO, emit, namespace, send, join_room, leave_room
 
 from channels import Channels
-from helper import add_seconds, get_cookie, now_stamp
+from helper import add_seconds, cObj, get_cookie, now_stamp
 
 
 # App Init
@@ -33,8 +33,8 @@ rooms = Channels()
 
 # Initalize channels
 rooms.add_channel('general')
-msg = {'text': 'Welcome to #general channel!',
-       'name': 'Bot', 'stamp': now_stamp()}
+msg = {'text': 'Welcome to channel #general',
+       'name': 'FlackBot', 'stamp': now_stamp(), 'color': cObj('#888888')}
 rooms.add_message('general', msg)
 
 
@@ -119,10 +119,16 @@ def on_message(message):
     if room is None:
         room = 'general'
 
+    # Message color
+    col = message['color']
+    if col is None:
+        col = '#888888'
+
     # Tmp message obj
     msg = {'text': message['text'],
            'name': users[session['uuid']]['username'],
-           'stamp': now_stamp()}
+           'stamp': now_stamp(),
+           'color': cObj(col)}
 
     # Save message to room
     rooms.add_message(room, msg)
@@ -136,12 +142,14 @@ def create_channel(channel):
     rooms.add_channel(channel)
     # Add booting messages
     tmp1 = {'text': 'Booting channel...',
-            'name': 'Bot',
-            'stamp': now_stamp()}
+            'name': 'FlackBot',
+            'stamp': now_stamp(),
+            'color': cObj('#888888')}
+    tmp2 = {'text': f'Channel #{channel} is active!',
+            'name': 'FlackBot',
+            'stamp': add_seconds(tmp1['stamp']),
+            'color': cObj('#888888')}
     rooms.add_message(channel, tmp1)
-    tmp2 = tmp1
-    tmp2['text'] = 'Chat in #' + channel + ' live!'
-    tmp2['stamp'] = add_seconds(tmp2['stamp'])
     rooms.add_message(channel, tmp2)
 
 
@@ -149,7 +157,7 @@ def updateRoster():
     """
     Sync online users with socket's active sids
     """
-    names = []
+    names = ['FlackBot']
 
     # Fill roster with current sessions
     for _uuid in users:
