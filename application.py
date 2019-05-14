@@ -11,7 +11,7 @@ from channels import Channels
 from helper import add_seconds, cObj, get_cookie, now_stamp
 
 
-# App Init
+# App + Socket setup
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
 socketio = SocketIO(app)

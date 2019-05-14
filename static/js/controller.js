@@ -58,7 +58,7 @@ ChatApp.controller('ChatController', function($scope, $http) {
       }
       // POST req to create channel
       $http
-        .post('/new_room', { name: $scope.new_room_name })
+        .post('/new_room', { name: $scope.new_room_name.toLowerCase() })
         .then(function(res) {
           // console.log(JSON.stringify(res.data));
           $scope.new_room_name = '';
@@ -68,7 +68,7 @@ ChatApp.controller('ChatController', function($scope, $http) {
         };
     }
     // Move them into the new room
-    $scope.changeRoom($scope.new_room_name);
+    $scope.changeRoom($scope.new_room_name.toLowerCase());
   };
 
   // Batch update messages
