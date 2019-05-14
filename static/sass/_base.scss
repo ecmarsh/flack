@@ -48,6 +48,9 @@ input {
     background: $white;
     color: $primary;
   }
+  &.disabled {
+    visibility: hidden;
+  }
 }
 .text-muted {
   color: $grey !important;
