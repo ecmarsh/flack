@@ -10,7 +10,7 @@ Flask-Session==0.3.1
 Flask-SocketIO==3.3.2
 idna==2.8
 itsdangerous==1.1.0
-Jinja2==2.10
+Jinja2==2.11.3
 MarkupSafe==1.1.0
 pbr==5.1.2
 psycopg2==2.7.7
